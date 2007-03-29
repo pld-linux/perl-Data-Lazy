@@ -1,0 +1,57 @@
+#
+# Conditional build:
+%bcond_without	tests		# do not perform "make test"
+#
+%include	/usr/lib/rpm/macros.perl
+%define	pdir	Data
+%define	pnam	Lazy
+Summary:	Data::Lazy.pm - "lazy" (defered/on-demand) variables
+#Summary(pl.UTF-8):	
+Name:		perl-Data-Lazy
+Version:	0.6
+Release:	1
+# same as perl
+License:	GPL v1+ or Artistic
+Group:		Development/Languages/Perl
+Source0:	http://www.cpan.org/modules/by-authors/id/S/SA/SAMV/Data-Lazy-0.6.tar.gz
+# Source0-md5:	12af27598b4b02300768567e614677a7
+URL:		http://search.cpan.org/dist/Data-Lazy/
+BuildRequires:	perl-devel >= 1:5.8.0
+BuildRequires:	rpm-perlprov >= 4.1-13
+BuildArch:	noarch
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%description
+A very little module for generic on-demand computation of values in a
+scalar, array or hash.
+
+It provides scalars that are "lazy", that is their value is computed
+only when accessed, and at most once.
+
+# %description -l pl.UTF-8
+# TODO
+
+%prep
+%setup -q -n %{pdir}-%{pnam}-%{version}
+
+%build
+%{__perl} Makefile.PL \
+	INSTALLDIRS=vendor
+%{__make}
+
+%{?with_tests:%{__make} test}
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(644,root,root,755)
+%doc Changes
+%{perl_vendorlib}/Data/*.pm
+%{_mandir}/man3/*
