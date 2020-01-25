@@ -2,7 +2,6 @@
 # Conditional build:
 %bcond_without	tests		# do not perform "make test"
 #
-%include	/usr/lib/rpm/macros.perl
 %define	pdir	Data
 %define	pnam	Lazy
 Summary:	Data::Lazy.pm - "lazy" (defered/on-demand) variables
